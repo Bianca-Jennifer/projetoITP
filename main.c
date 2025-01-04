@@ -13,7 +13,7 @@ int verificar(char identificador[]) {
 
     for (int i = 0; identificador[i] != '\0'; i++) {
         if (!isdigit(identificador[i])) {
-            printf("O identificador cont�m valores n�o num�ricos.\n");
+            printf("O identificador contém valores não numéricos.\n");
             return 1;
             break;
         }
@@ -21,7 +21,7 @@ int verificar(char identificador[]) {
 
 
     if (tamanho != 8) {
-        printf("O identificador n�o cont�m 8 d�gitos.\n");
+        printf("O identificador não contém 8 dígitos.\n");
         return 1;
     }
 
@@ -38,11 +38,56 @@ int verificar(char identificador[]) {
     numero_que_falta = soma % 10;
 
     if (numero_que_falta != identificador[7] - '0') {
-        printf("O d�gito verificador � inv�lido.\n");
+        printf("O dígito verificador é inválido.\n");
         return 1;
     }
 
     return 0;
+}
+
+void conversor(const char *esquerda, const char *direita, char *lcode, char *rcode) {
+    // Mapeamento dos dígitos para suas representações
+    const char *tablcode[10] = {
+        "0001101", // 0
+        "0011001", // 1
+        "0010011", // 2
+        "0111101", // 3
+        "0100011", // 4
+        "0110001", // 5
+        "0101111", // 6
+        "0111011", // 7
+        "0110111", // 8
+        "0001011"  // 9
+    };
+        const char *tabrcode[10] = {
+        "1110010", // 0
+        "1100110", // 1
+        "1101100", // 2
+        "1000010", // 3
+        "1011100", // 4
+        "1001110", // 5
+        "1010000", // 6
+        "1000100", // 7
+        "1001000", // 8
+        "1110100"  // 9
+    };
+
+    lcode[0] = '\0'; // Inicializa a string de resultado vazia
+    rcode[0] = '\0';
+
+    // Para cada caractere no número
+    for (int i = 0; esquerda[i] != '\0'; i++) {
+        int digito = esquerda[i] - '0'; // Converte o caractere para um número
+        int digito2 = direita[i] - '0';
+        if (digito >= 0 && digito <= 9) {
+            strcat(lcode, tablcode[digito]); // Adiciona a string correspondente
+            strcat(rcode, tabrcode[digito2]);
+        } else {
+            printf("Caractere inválido: %c\n", esquerda[i]);
+            printf("Caractere inválido: %c\n", direita[i]);
+            return;
+        }
+    }
 }
 
 
@@ -82,15 +127,20 @@ int main(int argc, char *argv[]) {
 
             }
             char esquerda[5], direita[5];
+            char lcode[29], rcode[29];
                 strncpy(esquerda, argv[1], 4);
                 strncpy(direita, argv[1] + 4, 4);
 
                 esquerda[4] = '\0'; 
                 direita[4] = '\0';
+            
+            conversor(esquerda, direita, lcode, rcode);
 
-            printf("Informa��es: c�digo = %d, espa�amento lateral = %d, quantidade de pixels = %d, altura = %d, nome do arquivo = %s\n", identificador, espacamento_lateral, quantidade_pixel, altura, nome);
+            printf("Informações: código = %d, espaçamento lateral = %d, quantidade de pixels = %d, altura = %d, nome do arquivo = %s\n", identificador, espacamento_lateral, quantidade_pixel, altura, nome);
             printf("%s\n", esquerda);
             printf("%s\n", direita);
+            printf("%s\n", lcode);
+            printf("%s\n", rcode);
         }
     }
 
