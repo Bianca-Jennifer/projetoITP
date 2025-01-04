@@ -13,7 +13,7 @@ int verificar(char identificador[]) {
 
     for (int i = 0; identificador[i] != '\0'; i++) {
         if (!isdigit(identificador[i])) {
-            printf("O identificador contém valores não numéricos.\n");
+            printf("O identificador contï¿½m valores nï¿½o numï¿½ricos.\n");
             return 1;
             break;
         }
@@ -21,7 +21,7 @@ int verificar(char identificador[]) {
 
 
     if (tamanho != 8) {
-        printf("O identificador não contém 8 dígitos.\n");
+        printf("O identificador nï¿½o contï¿½m 8 dï¿½gitos.\n");
         return 1;
     }
 
@@ -38,7 +38,7 @@ int verificar(char identificador[]) {
     numero_que_falta = soma % 10;
 
     if (numero_que_falta != identificador[7] - '0') {
-        printf("O dígito verificador é inválido.\n");
+        printf("O dï¿½gito verificador ï¿½ invï¿½lido.\n");
         return 1;
     }
 
@@ -81,10 +81,16 @@ int main(int argc, char *argv[]) {
                 snprintf(nome, sizeof(nome), "%s", argv[5]);
 
             }
+            char esquerda[5], direita[5];
+                strncpy(esquerda, argv[1], 4);
+                strncpy(direita, argv[1] + 4, 4);
 
-            printf("Informações: código = %d, espaçamento lateral = %d, quantidade de pixels = %d, altura = %d, nome do arquivo = %s\n", identificador, espacamento_lateral, quantidade_pixel, altura, nome);
+                esquerda[4] = '\0'; 
+                direita[4] = '\0';
 
-
+            printf("Informaï¿½ï¿½es: cï¿½digo = %d, espaï¿½amento lateral = %d, quantidade de pixels = %d, altura = %d, nome do arquivo = %s\n", identificador, espacamento_lateral, quantidade_pixel, altura, nome);
+            printf("%s\n", esquerda);
+            printf("%s\n", direita);
         }
     }
 
