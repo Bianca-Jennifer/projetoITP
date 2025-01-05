@@ -8,16 +8,11 @@
 
 int** criar_matriz(int largura_total, int altura_total, char* codigodebarras, int espacamento_lateral, int quantidade_pixel) {
     // Aloca memória para a matriz
-    int** matriz = malloc(altura_total * sizeof(int*));
-    for (int i = 0; i < altura_total; i++) {
-        matriz[i] = malloc(largura_total * sizeof(int));
-    }
+   int** matriz = (int**) calloc(altura_total, sizeof(int*));
 
-    // Preenche a matriz com valores iniciais (tudo branco)
+    // Aloca memória para cada linha da matriz e inicializa com 0
     for (int i = 0; i < altura_total; i++) {
-        for (int j = 0; j < largura_total; j++) {
-            matriz[i][j] = 0;
-        }
+        matriz[i] = (int*) calloc(largura_total, sizeof(int));  // Cada linha é um vetor de inteiros
     }
 
     //Altura da barra
@@ -72,8 +67,8 @@ void liberar_matriz(int** matriz, int altura_total) {
 
 int main(int argc, char *argv[]) {
 
-    int identificador = 0, espacamento_lateral = 0, quantidade_pixel = 0, altura = 0;
-    char nome[30] = "";
+    int identificador = 0, espacamento_lateral = 4, quantidade_pixel = 3, altura = 50;
+    char nome[30] = "codigo_de_barra.pbm";
     int cond;
     char marcadorif[4] = {'1', '0', '1', '\0'};
     char marcadorcentral[6] = {'0', '1', '0', '1', '0', '\0'};
@@ -105,6 +100,9 @@ int main(int argc, char *argv[]) {
 
             if (argc > 5) {
                 snprintf(nome, sizeof(nome), "%s", argv[5]);
+                if (nome[strlen(nome)-1] != 'm' || nome[strlen(nome)-2] == 'b' || nome[strlen(nome)-3] == 'p' || nome[strlen(nome)-4] == '.') {
+                    strcat(nome, ".pbm");
+                }
 
             }
 
