@@ -99,8 +99,9 @@ int main(int argc, char *argv[]) {
             }
 
             if (argc > 5) {
+                memset(nome, '\0', strlen(nome));
                 snprintf(nome, sizeof(nome), "%s", argv[5]);
-                if (nome[strlen(nome)-1] != 'm' || nome[strlen(nome)-2] == 'b' || nome[strlen(nome)-3] == 'p' || nome[strlen(nome)-4] == '.') {
+                if (strlen(nome) >=4 && nome[strlen(nome)-1] != 'm' || nome[strlen(nome)-2] != 'b' || nome[strlen(nome)-3] != 'p' || nome[strlen(nome)-4] != '.') {
                     strcat(nome, ".pbm");
                 }
 
