@@ -3,54 +3,16 @@
 #include <locale.h>
 #include <ctype.h>
 #include <string.h>
-
-
-int verificar(char identificador[]) {
-    int tamanho = strlen(identificador);
-    int soma = 0;
-    int numero_que_falta;
-
-
-    for (int i = 0; identificador[i] != '\0'; i++) {
-        if (!isdigit(identificador[i])) {
-            printf("O identificador cont�m valores n�o num�ricos.\n");
-            return 1;
-            break;
-        }
-    }
-
-
-    if (tamanho != 8) {
-        printf("O identificador n�o cont�m 8 d�gitos.\n");
-        return 1;
-    }
-
-    for (int i = 0; i < 7; i++) {
-        int numero = identificador[i] - '0';
-        if (i % 2 == 0) {
-            soma += (3 * numero);
-        } else {
-            soma += (1 * numero);
-        }
-    }
-
-
-    numero_que_falta = soma % 10;
-
-    if (numero_que_falta != identificador[7] - '0') {
-        printf("O d�gito verificador � inv�lido.\n");
-        return 1;
-    }
-
-    return 0;
-}
-
+#include "verificador.h"
+#include "conversor.h"
 
 int main(int argc, char *argv[]) {
 
     int identificador = 0, espacamento_lateral = 0, quantidade_pixel = 0, altura = 0;
     char nome[20] = "";
     int cond;
+    char marcadorif[4] = {'1', '0', '1', '\0'};
+    char marcadorcentral[6] = {'0', '1', '0', '1', '0', '\0'};
 
     setlocale(0, "Portuguese");
 
@@ -81,16 +43,36 @@ int main(int argc, char *argv[]) {
                 snprintf(nome, sizeof(nome), "%s", argv[5]);
 
             }
+
+            //separador de digitos iniciais e digitos finais
             char esquerda[5], direita[5];
+            char lcode[29], rcode[29];
                 strncpy(esquerda, argv[1], 4);
                 strncpy(direita, argv[1] + 4, 4);
 
                 esquerda[4] = '\0'; 
                 direita[4] = '\0';
+            
+            //converte os digitos iniciais em lcode e os finais em rcode
+            conversor(esquerda, direita, lcode, rcode);
 
-            printf("Informa��es: c�digo = %d, espa�amento lateral = %d, quantidade de pixels = %d, altura = %d, nome do arquivo = %s\n", identificador, espacamento_lateral, quantidade_pixel, altura, nome);
+            //junta marcadores digitos convertidos
+            char codigodebarras[68] = "";
+
+                strcat(codigodebarras, marcadorif);
+                strcat(codigodebarras, lcode);
+                strcat(codigodebarras, marcadorcentral);
+                strcat(codigodebarras, rcode);
+                strcat(codigodebarras, marcadorif);
+
+            printf("Informações: código = %d, espaçamento lateral = %d, quantidade de pixels = %d, altura = %d, nome do arquivo = %s\n", identificador, espacamento_lateral, quantidade_pixel, altura, nome);
             printf("%s\n", esquerda);
             printf("%s\n", direita);
+            printf("%s\n", lcode);
+            printf("%s\n", rcode);
+            printf("%s\n", codigodebarras);
+
+
         }
     }
 
