@@ -52,6 +52,42 @@ int main(int argc, char *argv[]) {
 
             }
 
+            const char *nome_arquivo = nome;
+            FILE *file = fopen(nome_arquivo, "r");
+
+            if (file != NULL) {
+                printf("O arquivo já existe!Deseja sobrescrevê-lo?");
+                char resposta[4];
+                fgets(resposta, sizeof(resposta), stdin);
+                resposta[strcspn(resposta, "\n")] = '\0';
+
+               if (strlen(resposta) >= 2) {
+                for (int i = 0; i < strlen(resposta); i++) { 
+                    if (i == 1) {
+                        resposta[i] = 'a';
+                        continue;
+                    } else {
+                        resposta[i] = tolower(resposta[i]);  
+                    }
+                      
+                }
+                
+               }
+                
+
+
+                
+                if (strcmp(resposta, "nao") == 0 ||  strcmp(resposta, "n") == 0) {
+                    printf("Arquivo resultante já existe!");
+                    fclose(file);
+                    return 0;
+                }
+
+                fclose(file);
+            } 
+            
+
+
             // Separador de digitos iniciais e digitos finais
             char esquerda[5], direita[5];
             char lcode[29], rcode[29];
