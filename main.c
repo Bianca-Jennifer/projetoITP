@@ -5,8 +5,13 @@
 #include <string.h>
 #include "verificador.h"
 #include "conversor.h"
+#include "mat.h"
+#include "libmat.h"
+#include "pbm.h"
 
 int main(int argc, char *argv[]) {
+
+    setlocale(LC_ALL, "pt_BR.UTF-8");
 
     int identificador = 0, espacamento_lateral = 4, quantidade_pixel = 3, altura = 50;
     char nome[30] = "codigo_de_barra.pbm";
@@ -14,9 +19,7 @@ int main(int argc, char *argv[]) {
     char marcadorif[4] = {'1', '0', '1', '\0'};
     char marcadorcentral[6] = {'0', '1', '0', '1', '0', '\0'};
 
-    setlocale(0, "Portuguese");
-
-
+// Verifica a validade do identificador
     if (argc > 1) {
         cond = verificar(argv[1]);
 
@@ -39,6 +42,7 @@ int main(int argc, char *argv[]) {
 
             }
 
+            // Verifica se o usuário digitou ".pbm" ao nome do arquivo. caso não, o ".pbm" é adicionado
             if (argc > 5) {
                 memset(nome, '\0', strlen(nome));
                 snprintf(nome, sizeof(nome), "%s", argv[5]);
@@ -48,7 +52,7 @@ int main(int argc, char *argv[]) {
 
             }
 
-            //separador de digitos iniciais e digitos finais
+            // Separador de digitos iniciais e digitos finais
             char esquerda[5], direita[5];
             char lcode[29], rcode[29];
                 strncpy(esquerda, argv[1], 4);
@@ -57,10 +61,10 @@ int main(int argc, char *argv[]) {
                 esquerda[4] = '\0'; 
                 direita[4] = '\0';
             
-            //converte os digitos iniciais em lcode e os finais em rcode
+            // Converte os digitos iniciais em lcode e os finais em rcode
             conversor(esquerda, direita, lcode, rcode);
 
-            //junta marcadores digitos convertidos
+            // Concatena marcadores e digitos convertidos
             char codigodebarras[68] = "";
 
                 strcat(codigodebarras, marcadorif);
@@ -72,6 +76,7 @@ int main(int argc, char *argv[]) {
             // Calcula a largura e a altura total da imagem
             int largura_total = 2 * espacamento_lateral + strlen(codigodebarras) * quantidade_pixel;
             int altura_total = altura + (2 * espacamento_lateral);
+
             // Cria a matriz
             int** matriz = criar_matriz(largura_total, altura_total, codigodebarras, espacamento_lateral, quantidade_pixel);
 
@@ -81,14 +86,8 @@ int main(int argc, char *argv[]) {
             // Libera a memória da matriz
             liberar_matriz(matriz, altura_total);
 
+            // Imprime os parâmetros do código de barras
             printf("Informações: código = %d, espaçamento lateral = %d, quantidade de pixels = %d, altura = %d, nome do arquivo = %s\n", identificador, espacamento_lateral, quantidade_pixel, altura, nome);
-            printf("%s\n", esquerda);
-            printf("%s\n", direita);
-            printf("%s\n", lcode);
-            printf("%s\n", rcode);
-            printf("%s\n", codigodebarras);
-            printf("hello world");
-
 
         }
     }
