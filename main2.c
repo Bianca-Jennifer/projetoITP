@@ -12,6 +12,9 @@ int verificar_arquivo_valido (char nome[30]) {
         printf("O arquivo é inválido!");
         return 1;
     }
+
+    fclose(file);
+    
     return 0;
 }
 
