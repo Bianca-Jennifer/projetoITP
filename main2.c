@@ -9,7 +9,7 @@ int verificar_arquivo_valido (char nome[30]) {
     FILE *file = fopen(nome_arquivo, "r");
 
     if (file == NULL) {
-        printf("O arquivo não existe!");
+        printf("O arquivo é inválido\n!");
         return 1;
     } else {
         //----------------------primeira linha----------
