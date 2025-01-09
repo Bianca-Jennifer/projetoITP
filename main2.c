@@ -230,6 +230,7 @@ int verificar_codigo_valido (char nome[30]) {
     }
 
     int cond;
+    //Verifica se o espaçamento lateral é uniforme em todos os  lados
     cond = verificar_espacamento(matriz, largura_total, altura_total);
 
     if (cond == -1) {
