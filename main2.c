@@ -73,6 +73,7 @@ int verificar_arquivo_valido (char nome[30]) {
             fclose(file);
             return 1;
         } 
+        
 
         //----------------------desenho-------------
         //verifica se há 1 ou 0,se a quantidade de elementos é igual à multiplicação dos dois valores
@@ -112,7 +113,45 @@ int verificar_arquivo_valido (char nome[30]) {
 
     fclose(file);
     return 0;
-}       
+}      
+
+int verificar_codigo_valido (char nome[30]) {
+    const char *nome_arquivo = nome;
+    int largura_total, altura_total;
+    char linha_arq[256];
+    FILE *file = fopen(nome_arquivo, "r");
+
+    
+    fgets(linha_arq, sizeof(linha_arq), file);
+    fgets(linha_arq, sizeof(linha_arq), file);
+
+    
+
+    //Guarda o valor da largura e altura
+    sscanf(linha_arq, "%d %d", &largura_total, &altura_total);
+    
+
+    // Aloca memória para a matriz
+    int** matriz = (int**) calloc(altura_total, sizeof(int*));
+
+    // Aloca memória para cada linha da matriz e inicializa com 0
+    for (int i = 0; i < altura_total; i++) {
+        matriz[i] = (int*) calloc(largura_total, sizeof(int));  // Cada linha é um vetor de inteiros
+    }
+
+    //Guarda os valores na matriz
+    int valor;
+    for (int i = 0; i < altura_total; i++) {
+        for (int j = 0; j < largura_total; j++) {
+            fscanf(file, "%d", &valor);
+            matriz[i][j] = valor;
+                   
+        }
+    }
+    fclose(file);
+    return 0;
+
+}
 
 int main(int argc, char *argv[]) {
 
@@ -132,6 +171,7 @@ int main(int argc, char *argv[]) {
 
         if (cond == 0) {
             printf("existe");
+            verificar_codigo_valido(nome);
             
         }
     }
