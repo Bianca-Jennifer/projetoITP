@@ -115,6 +115,86 @@ int verificar_arquivo_valido (char nome[30]) {
     return 0;
 }      
 
+int verificar_espacamento(int **matriz, int largura_total, int altura_total) {
+    int espaco_cima = 0, espaco_baixo = 0, espaco_esquerda = 0, espaco_direita = 0;
+    //----------Verifica se o espaçamento lateral é uniforme, guardando o valor de cada lado e comparando
+    // Guarda quantas linhas estão zeradas em cima
+    for (int i = 0; i < altura_total; i++) {
+        int linha_vazia = 1; 
+        for (int j = 0; j < largura_total; j++) {
+            if (matriz[i][j] == 1) {
+                linha_vazia = 0;
+                break;
+            }
+        }
+        if (linha_vazia) {
+            espaco_cima++;
+        } else {
+            break;
+        }
+    }
+
+    // Guarda quantas linhas estão zeradas na parte de baixo 
+    for (int i = altura_total - 1; i >= 0; i--) {
+        int linha_vazia = 1;
+        for (int j = 0; j < largura_total; j++) {
+            if (matriz[i][j] == 1) {
+                linha_vazia = 0;
+                break;
+            }
+        }
+        if (linha_vazia) {
+            espaco_baixo++;
+        } else {
+            break;
+        }
+    }
+
+    // Guarda quantas colunas estão zeradas na parte esquerda
+    for (int j = 0; j < largura_total; j++) {
+        int coluna_vazia = 1;
+        for (int i = 0; i < altura_total; i++) {
+            if (matriz[i][j] == 1) {
+                coluna_vazia = 0;
+                break;
+            }
+        }
+        if (coluna_vazia) {
+            espaco_esquerda++;
+        } else {
+            break;
+        }
+    }
+
+    // Guarda quantas colunas estão zeradas na parte direita 
+    for (int j = largura_total - 1; j >= 0; j--) {
+        int coluna_vazia = 1;
+        for (int i = 0; i < altura_total; i++) {
+            if (matriz[i][j] == 1) {
+                coluna_vazia = 0;
+                break;
+            }
+        }
+        if (coluna_vazia) {
+            espaco_direita++;
+        } else {
+            break;
+        }
+    }
+
+    // Compara os valores
+    if (espaco_cima == espaco_baixo && espaco_cima == espaco_esquerda && espaco_cima == espaco_direita) {
+        printf("Espaçamento uniforme: %d\n", espaco_cima);
+        return espaco_baixo;
+    } else {
+        printf("Espaçamento desigual:\n");
+        printf("Cima = %d, Baixo = %d, Esquerda = %d, Direita = %d\n",
+               espaco_cima, espaco_baixo, espaco_esquerda, espaco_direita);
+        return -1;       
+    }
+}
+
+
 int verificar_codigo_valido (char nome[30]) {
     const char *nome_arquivo = nome;
     int largura_total, altura_total;
@@ -148,6 +228,17 @@ int verificar_codigo_valido (char nome[30]) {
                    
         }
     }
+
+    int cond;
+    cond = verificar_espacamento(matriz, largura_total, altura_total);
+
+    if (cond == -1) {
+        fclose(file);
+        return 1;
+    } 
+    int espacamento_lateral = cond;
+    
+
     fclose(file);
     return 0;
 
