@@ -195,6 +195,79 @@ int verificar_espacamento(int **matriz, int largura_total, int altura_total) {
 }
 
 
+
+int verificar_largura_por_pixel(int **matriz, int espacamento_lateral, int largura_total, int altura_total) {
+    int largura_por_pixel = 0;
+    int encontrado = 0;
+
+    // Pula o espaçamento lateral
+    int inicio_codigo = espacamento_lateral; 
+    int fim_coluna = largura_total - espacamento_lateral; 
+    int fim_linha = altura_total - espacamento_lateral;
+    
+    //Precisa começar com 1 por ser marcador
+    if (matriz[inicio_codigo][inicio_codigo] != 1) {
+        return -1;
+    }
+    // Verifica quantas vezes o primeiro elemento (1) se repete
+    for (int i = inicio_codigo; i < fim_linha; i++) {
+        for (int j = inicio_codigo; j < fim_coluna;) {
+            if (matriz[i][j] == 1) {  // O primeiro valor é sempre 1
+                int largura_atual = 0;
+
+                
+                while (j < fim_coluna && matriz[i][j] == 1) {
+                    largura_atual++;
+                    j++;  
+                }
+
+                
+                if (!encontrado) {
+                    largura_por_pixel = largura_atual;
+                    encontrado = 1;
+                    break;
+                }
+            } else {
+                j++; 
+            }
+        }
+    }
+
+    
+    printf("Largura do primeiro elemento (1) identificada: %d\n", largura_por_pixel);
+    //Caso só tenha 1 na matriz
+    if (!encontrado) {
+        printf("Erro!\n");
+        return -1;
+    }
+
+
+    // Verifica se a largura dos outros elementos segue o mesmo padrão
+
+    int num;
+    for (int i = inicio_codigo; i < altura_total - espacamento_lateral; i++) {
+        for (int j = inicio_codigo; j < fim_coluna; j+=largura_por_pixel) {
+            num = matriz[i][j];
+            for (int cont = 1, cont2 = j; cont <= largura_por_pixel; cont++) {
+
+                if (num != matriz[i][cont2]) {
+                    printf("Largura por pixel inconsistente:\n");
+                    return -1;
+                }
+                cont2++;
+
+            }
+
+        }
+    }   
+
+    // Retorna a largura por pixel se estiver correto
+    return largura_por_pixel;
+}
+    
+ 
+   
+
 int verificar_codigo_valido (char nome[30]) {
     const char *nome_arquivo = nome;
     int largura_total, altura_total;
@@ -231,14 +304,20 @@ int verificar_codigo_valido (char nome[30]) {
 
     int cond;
     //Verifica se o espaçamento lateral é uniforme em todos os  lados
-    cond = verificar_espacamento(matriz, largura_total, altura_total);
+    int espacamento_lateral = verificar_espacamento(matriz, largura_total, altura_total);
 
-    if (cond == -1) {
+    if (espacamento_lateral == -1) {
         fclose(file);
         return 1;
     } 
-    int espacamento_lateral = cond;
+
+    int largura_por_pixel = verificar_largura_por_pixel(matriz, espacamento_lateral, largura_total, altura_total);
     
+    if (largura_por_pixel == -1) {
+        printf("O código não foi encontrado\n");
+        fclose(file);
+        return 1;
+    }
 
     fclose(file);
     return 0;
