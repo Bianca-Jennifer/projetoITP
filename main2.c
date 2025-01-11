@@ -264,9 +264,69 @@ int verificar_largura_por_pixel(int **matriz, int espacamento_lateral, int largu
     // Retorna a largura por pixel se estiver correto
     return largura_por_pixel;
 }
+
+//Verifica se as linhas com o código são iguais    
+int verificar_linhas_iguais(int **matriz, int largura_total, int altura_total, int espacamento_lateral) {
+    int inicio_codigo = espacamento_lateral;
+    int fim_linha = altura_total - espacamento_lateral;
+    int fim_coluna = largura_total - espacamento_lateral;
+
+    for (int i = inicio_codigo; i < fim_linha; i++) {
+        for (int j = inicio_codigo; j < fim_coluna; j++) {
+            if (matriz[i][j] != matriz[inicio_codigo][j]) {
+                return 1;
+            }
+
+        }
+    }  
+} 
+
+//Verifica se há os marcadores
+int verificar_marcadores(int **matriz, int largura_total, int altura_total, int espacamento_lateral, int largura_por_pixel) {
+    int tamanho_do_codigo = (largura_total - (2 * espacamento_lateral))/largura_por_pixel;
+    int inicio_codigo = espacamento_lateral;
+    int fim_coluna = largura_total - espacamento_lateral;
+    int marcador_inicio_fim[3] = {1,0,1};
+    int marcador_meio[5] = {0,1,0,1,0}; 
+
+    //Verifica se o tamanho do código está correto(3+28+5+28+3)
+    if (tamanho_do_codigo != 67) {
+        printf("Erro\n");
+        return 1;
+    }
     
- 
-   
+
+    //Verifica se há o marcador inicial
+    for (int j = inicio_codigo, cont = 0; cont < 3; j+= largura_por_pixel, cont++) {
+        if (matriz[inicio_codigo][j] != marcador_inicio_fim[cont]) {
+            printf("Erro\n");
+            return 1;
+        }
+        
+    }
+    
+
+    //Verifica se há o marcador do meio
+    for (int j = inicio_codigo + (31 * largura_por_pixel), cont = 0; cont < 5; j+= largura_por_pixel, cont++) {
+        if (matriz[inicio_codigo][j] != marcador_meio[cont]) {
+            printf("Erro\n");
+            return 1;
+        }
+        
+    }
+    
+    //Verifica se há o marcador final
+    for (int j = fim_coluna - largura_por_pixel, cont = 2; cont >= 0; j -= largura_por_pixel, cont--) {
+        if (matriz[inicio_codigo][j] != marcador_inicio_fim[cont]) {
+            printf("Erro\n");
+            return 1;
+        }
+        
+    }
+
+    return 0;
+
+}   
 
 int verificar_codigo_valido (char nome[30]) {
     const char *nome_arquivo = nome;
@@ -302,7 +362,7 @@ int verificar_codigo_valido (char nome[30]) {
         }
     }
 
-    int cond;
+    
     //Verifica se o espaçamento lateral é uniforme em todos os  lados
     int espacamento_lateral = verificar_espacamento(matriz, largura_total, altura_total);
 
@@ -319,6 +379,22 @@ int verificar_codigo_valido (char nome[30]) {
         return 1;
     }
 
+    //Verifica se todas as linhas com o código de barra são iguais
+    int cond = verificar_linhas_iguais(matriz, largura_total, altura_total, espacamento_lateral);
+    if (cond == 1) {
+        printf("Inválido");
+        fclose(file);
+        return 1;
+    }
+
+    //Verifica se há marcadores
+    cond = verificar_marcadores(matriz, largura_total, altura_total, espacamento_lateral, largura_por_pixel);
+
+    if (cond == 1) {
+        printf("Inválido");
+        fclose(file);
+        return 1;
+    }
     fclose(file);
     return 0;
 
