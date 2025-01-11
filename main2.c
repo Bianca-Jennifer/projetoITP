@@ -264,8 +264,23 @@ int verificar_largura_por_pixel(int **matriz, int espacamento_lateral, int largu
     // Retorna a largura por pixel se estiver correto
     return largura_por_pixel;
 }
-    
- 
+
+//Verifica se as linhas com o código são iguais    
+int verificar_linhas_iguais(int **matriz, int largura_total, int altura_total, int espacamento_lateral) {
+    int num;
+    int inicio_codigo = espacamento_lateral;
+    int fim_linha = altura_total - espacamento_lateral;
+    int fim_coluna = largura_total - espacamento_lateral;
+
+    for (int i = inicio_codigo; i < fim_linha; i++) {
+        for (int j = inicio_codigo; j < fim_coluna; j++) {
+            if (matriz[i][j] != matriz[inicio_codigo][j]) {
+                return 1;
+            }
+
+        }
+    }  
+} 
    
 
 int verificar_codigo_valido (char nome[30]) {
@@ -302,7 +317,7 @@ int verificar_codigo_valido (char nome[30]) {
         }
     }
 
-    int cond;
+    
     //Verifica se o espaçamento lateral é uniforme em todos os  lados
     int espacamento_lateral = verificar_espacamento(matriz, largura_total, altura_total);
 
@@ -319,6 +334,12 @@ int verificar_codigo_valido (char nome[30]) {
         return 1;
     }
 
+    //Verifica se todas as linhas com o código de barra são iguais
+    int cond = verificar_linhas_iguais(matriz, largura_total, altura_total, espacamento_lateral);
+    if (cond == 1) {
+        printf("Inválido");
+        return 1;
+    }
     fclose(file);
     return 0;
 
