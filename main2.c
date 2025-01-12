@@ -4,6 +4,9 @@
 #include <ctype.h>
 #include <string.h>
 
+/*As funções "verificar_espacamento","verificar_largura_por_pixel",
+"verificar linhas iguais" e "verificar_marcadores" são usadas dentro da função "verificar_codigo_valido".
+*/
 int verificar_arquivo_valido (char nome[30]) {
     const char *nome_arquivo = nome;
     FILE *file = fopen(nome_arquivo, "r");
@@ -328,7 +331,7 @@ int verificar_marcadores(int **matriz, int largura_total, int altura_total, int 
 
 }   
 
-int verificar_codigo_valido (char nome[30]) {
+char* verificar_codigo_valido (char nome[30]) {
     const char *nome_arquivo = nome;
     int largura_total, altura_total;
     char linha_arq[256];
@@ -368,7 +371,7 @@ int verificar_codigo_valido (char nome[30]) {
 
     if (espacamento_lateral == -1) {
         fclose(file);
-        return 1;
+        return NULL;
     } 
 
     int largura_por_pixel = verificar_largura_por_pixel(matriz, espacamento_lateral, largura_total, altura_total);
@@ -376,7 +379,7 @@ int verificar_codigo_valido (char nome[30]) {
     if (largura_por_pixel == -1) {
         printf("O código não foi encontrado\n");
         fclose(file);
-        return 1;
+        return NULL;
     }
 
     //Verifica se todas as linhas com o código de barra são iguais
@@ -384,7 +387,7 @@ int verificar_codigo_valido (char nome[30]) {
     if (cond == 1) {
         printf("Inválido");
         fclose(file);
-        return 1;
+        return NULL;
     }
 
     //Verifica se há marcadores
@@ -393,10 +396,28 @@ int verificar_codigo_valido (char nome[30]) {
     if (cond == 1) {
         printf("Inválido");
         fclose(file);
-        return 1;
+        return NULL;
     }
+
+    //Prepara lista com o código 
+    int inicio_codigo = espacamento_lateral;
+    int fim_coluna = largura_total - espacamento_lateral;
+    char* lista = (char*) calloc(68, sizeof(char));
+
+    for (int j = inicio_codigo, cont = 0; j < fim_coluna; j+=largura_por_pixel, cont++) {
+        lista[cont] = matriz[inicio_codigo][j] + '0';
+    }
+
+    
+
+    //Libera a matriz
+    for (int i = 0; i < altura_total; i++) {
+        free(matriz[i]);
+    }
+    free(matriz);
+
     fclose(file);
-    return 0;
+    return lista;
 
 }
 
@@ -418,8 +439,17 @@ int main(int argc, char *argv[]) {
 
         if (cond == 0) {
             printf("existe");
-            verificar_codigo_valido(nome);
+            char *lista_codigo = verificar_codigo_valido(nome);
+
+            //Caso o código seja inválido
+            if (lista_codigo == NULL) {
+                printf("Sem código");
+                return 1;
+            }
             
+            for (int i = 0; lista_codigo[i] != '\0'; i++) {
+                printf("%c", lista_codigo[i]);
+            }
         }
     }
 
