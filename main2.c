@@ -438,18 +438,40 @@ int main(int argc, char *argv[]) {
         cond = verificar_arquivo_valido(nome);
 
         if (cond == 0) {
-            printf("existe");
+            printf("existe\n");
             char *lista_codigo = verificar_codigo_valido(nome);
+            char esquerda[29];
+            char direita[29];
 
             //Caso o código seja inválido
             if (lista_codigo == NULL) {
                 printf("Sem código");
                 return 1;
             }
-            
-            for (int i = 0; lista_codigo[i] != '\0'; i++) {
-                printf("%c", lista_codigo[i]);
+
+            //separa os 28 dígitos da esquerda retirando o marcador inicial
+            for(int i = 3, contador = 0; contador < 28; i++, contador++){
+            esquerda[contador] = lista_codigo[i];
+            printf("%c", esquerda[contador]);
             }
+            printf("\n");
+            esquerda[29] = '\0';
+
+            //separa os 28 dígitos da direita após o marcador central
+            for(int i = 36, contador = 0; contador < 28; i++, contador++){
+            direita[contador] = lista_codigo[i];
+            printf("%c", direita[contador]);
+            }
+            printf("\n");
+            direita[29] = '\0';
+
+            //para conversão, usar um for que percorre 8 vezes (1 para cada dígito) e um for para 
+            //percorrer 7 cada uma das 8 vezes, jogando cada 7 dígitos para uma string correspondente
+            //a cada dígito, usando swit case para comparar e converter. ao final da conversão,
+            //usar strcat para concatenar o número final do códgio. Após isso verificar sua validade.
+
+            printf("%s", lista_codigo);
+            
         }
     }
 
