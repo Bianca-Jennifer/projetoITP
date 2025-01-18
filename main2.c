@@ -3,6 +3,7 @@
 #include <locale.h>
 #include <ctype.h>
 #include <string.h>
+#include "verificador.h"
 
 /*As funções "verificar_espacamento","verificar_largura_por_pixel",
 "verificar linhas iguais" e "verificar_marcadores" são usadas dentro da função "verificar_codigo_valido".
@@ -421,7 +422,105 @@ char* verificar_codigo_valido (char nome[30]) {
 
 }
 
-int main(int argc, char *argv[]) {
+char *conversorInverso(char esquerda[29], char direita[29]){
+    char esquerdaConvertida[5];
+    char direitaConvertida[5];
+
+    // Mapeamento dos padrões binários para os dígitos
+    const char *mapaE[10] = {
+        "0001101", // 0
+        "0011001", // 1
+        "0010011", // 2
+        "0111101", // 3
+        "0100011", // 4
+        "0110001", // 5
+        "0101111", // 6
+        "0111011", // 7
+        "0110111", // 8
+        "0001011"  // 9
+    };
+
+    const char *mapaD[10] = {
+        "1110010", // 0
+        "1100110", // 1
+        "1101100", // 2
+        "1000010", // 3
+        "1011100", // 4
+        "1001110", // 5
+        "1010000", // 6
+        "1000100", // 7
+        "1001000", // 8
+        "1110100"  // 9
+    };
+
+    for (int i = 0; i < 4; i++) {
+        char temp[8]; // Cria um buffer para armazenar os 8 bits
+        for (int j = 0; j < 7; j++) {
+            temp[j] = esquerda[i * 7 + j];
+        }
+        temp[7] = '\0'; // Adiciona o terminador nulo
+
+        // Procura o padrão no array
+        int encontrado = 0;
+        for (int k = 0; k < 10; k++) {
+            if (strcmp(temp, mapaE[k]) == 0) {
+                esquerdaConvertida[i] = '0' + k; // Converte índice para char
+                encontrado = 1;
+                break;
+            }
+        }
+
+        if (!encontrado) {
+            printf("Erro: Padrão %s não encontrado\n", temp);
+            esquerdaConvertida[i] = '?'; // Marca erro
+            return NULL;
+        }
+    }
+    esquerdaConvertida[4] = '\0'; // Adiciona terminador nulo
+
+    for (int i = 0; i < 4; i++) {
+        char temp[8]; // Cria um buffer para armazenar os 8 bits
+        for (int j = 0; j < 7; j++) {
+            temp[j] = direita[i * 7 + j];
+        }
+        temp[7] = '\0'; // Adiciona o terminador nulo
+
+        // Procura o padrão no array
+        int encontrado = 0;
+        for (int k = 0; k < 10; k++) {
+            if (strcmp(temp, mapaD[k]) == 0) {
+                direitaConvertida[i] = '0' + k; // Converte índice para char
+                encontrado = 1;
+                break;
+            }
+        }
+
+        if (!encontrado) {
+            printf("Erro: Padrão %s não encontrado\n", temp);
+            direitaConvertida[i] = '?'; // Marca erro
+            return NULL;
+        }
+    }
+    direitaConvertida[4] = '\0'; // Adiciona terminador nulo
+
+    char *codigoDeBarras = (char*) calloc(9, sizeof(char));
+
+    for(int i = 0, contador = 0; i < 8; i++){
+        if(i <= 3){
+            codigoDeBarras[i] = esquerdaConvertida[i];
+        }
+        else{
+            codigoDeBarras[i] = direitaConvertida[contador];
+            contador++;
+        }
+    }
+
+    return codigoDeBarras;
+}
+
+
+
+int main(int argc, char *argv[]){
 
     setlocale(LC_ALL, "pt_BR.UTF-8");
 
@@ -452,29 +551,38 @@ int main(int argc, char *argv[]) {
             //separa os 28 dígitos da esquerda retirando o marcador inicial
             for(int i = 3, contador = 0; contador < 28; i++, contador++){
             esquerda[contador] = lista_codigo[i];
-            printf("%c", esquerda[contador]);
             }
-            printf("\n");
-            esquerda[29] = '\0';
+            esquerda[28] = '\0';
 
             //separa os 28 dígitos da direita após o marcador central
             for(int i = 36, contador = 0; contador < 28; i++, contador++){
             direita[contador] = lista_codigo[i];
-            printf("%c", direita[contador]);
             }
-            printf("\n");
-            direita[29] = '\0';
+            direita[28] = '\0';
 
-            //para conversão, usar um for que percorre 8 vezes (1 para cada dígito) e um for para 
-            //percorrer 7 cada uma das 8 vezes, jogando cada 7 dígitos para uma string correspondente
-            //a cada dígito, usando swit case para comparar e converter. ao final da conversão,
-            //usar strcat para concatenar o número final do códgio. Após isso verificar sua validade.
+           char *codigo_de_barras = conversorInverso(esquerda, direita);
+           if(codigo_de_barras == NULL){
+                printf("Código não encontrado");
+                return 1;
+           }
+           char codigoFinal[9];
+           
+           for(int i = 0; i < 8; i++){
+                codigoFinal[i] = codigo_de_barras[i];
+           }
+            codigoFinal[8] = '\0';
 
-            printf("%s", lista_codigo);
-            
-        }
+            cond = verificarFinal(codigoFinal);
+
+            if(cond == 1){
+                printf("Código não encontrado");
+                return 1;
+            }
+
+            printf("%s", codigoFinal);
+        
     }
-
+}
 
     return 0;
 }
