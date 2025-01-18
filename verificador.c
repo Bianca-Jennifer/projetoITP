@@ -5,60 +5,57 @@
 #include <string.h>
 #include "verificador.h"
 
+// Função para verificar o identificador
 int verificar(char identificador[]) {
     int tamanho = strlen(identificador);
-    int soma = 0;
-    int numero_que_falta;
 
-
+    // Verifica se o identificador contém apenas números
     for (int i = 0; identificador[i] != '\0'; i++) {
         if (!isdigit(identificador[i])) {
             printf("O identificador contém valores não numéricos.\n");
             return 1;
-            break;
         }
     }
 
-
+    // Verifica se o identificador tem exatamente 8 dígitos
     if (tamanho != 8) {
         printf("O identificador não contém 8 dígitos.\n");
         return 1;
     }
 
-    for (int i = 0; i < 7; i++) {
-        int numero = identificador[i] - '0';
-        if (i % 2 == 0) {
-            soma += (3 * numero);
-        } else {
-            soma += (1 * numero);
-        }
-    }
-
-    verificarFinal(identificador);
-
-    return 0;
+    // Chama a função verificarFinal para validar o código
+    return verificarFinal(identificador); // Alteração: passa todo o identificador
 }
 
-int verificarFinal (char codigoDeBarras[]){
-    int soma = 0;
-    int numero_que_falta;
+int verificarFinal(char codigoDeBarras[]) {
+    int soma_impar = 0, soma_par = 0, soma_total, digito_verificador;
+    int tamanho = strlen(codigoDeBarras);
 
-    for (int i = 0; i < 7; i++) {
+    // Calcula a soma das posições ímpares e pares
+    for (int i = 0; i < tamanho - 1; i++) { // Exclui o último dígito (verificador)
         int numero = codigoDeBarras[i] - '0';
-        if (i % 2 == 0) {
-            soma += (3 * numero);
-        } else {
-            soma += (1 * numero);
+        if (i % 2 == 0) { // Posições ímpares (índice 0, 2, 4, 6)
+            soma_impar += numero;
+        } else { // Posições pares (índice 1, 3, 5)
+            soma_par += numero;
         }
     }
-    
-    numero_que_falta = soma % 10;
 
-    if (numero_que_falta != codigoDeBarras[7] - '0') {
+    // Soma total seguindo o padrão EAN-8
+    soma_total = soma_par + (soma_impar * 3);
+
+    // Calcula o múltiplo de 10 mais próximo maior ou igual à soma_total
+    int proximo_multiplo_10 = ((soma_total + 9) / 10) * 10;
+
+    // Obtém o dígito verificador
+    digito_verificador = proximo_multiplo_10 - soma_total;
+
+
+    // Compara o dígito verificador calculado com o fornecido no código
+    if (digito_verificador != (codigoDeBarras[7] - '0')) {
         printf("O dígito verificador é inválido.\n");
         return 1;
     }
-
 
     return 0;
 }
