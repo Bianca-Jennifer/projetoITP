@@ -34,13 +34,31 @@ int verificar(char identificador[]) {
         }
     }
 
+    verificarFinal(identificador);
 
+    return 0;
+}
+
+int verificarFinal (char codigoDeBarras[]){
+    int soma = 0;
+    int numero_que_falta;
+
+    for (int i = 0; i < 7; i++) {
+        int numero = codigoDeBarras[i] - '0';
+        if (i % 2 == 0) {
+            soma += (3 * numero);
+        } else {
+            soma += (1 * numero);
+        }
+    }
+    
     numero_que_falta = soma % 10;
 
-    if (numero_que_falta != identificador[7] - '0') {
+    if (numero_que_falta != codigoDeBarras[7] - '0') {
         printf("O dígito verificador é inválido.\n");
         return 1;
     }
+
 
     return 0;
 }
