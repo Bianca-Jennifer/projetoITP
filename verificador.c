@@ -8,6 +8,7 @@
 // Função para verificar o identificador
 int verificar(char identificador[]) {
     int tamanho = strlen(identificador);
+    int cond;
 
     // Verifica se o identificador contém apenas números
     for (int i = 0; identificador[i] != '\0'; i++) {
@@ -24,7 +25,12 @@ int verificar(char identificador[]) {
     }
 
     // Chama a função verificarFinal para validar o código
-    return verificarFinal(identificador); // Alteração: passa todo o identificador
+    cond = verificarFinal(identificador); // Alteração: passa todo o identificador
+    if (cond == 1) {
+        printf("O dígito verificador é inválido.\n");
+        return 1;
+    }
+    return 0;
 }
 
 int verificarFinal(char codigoDeBarras[]) {
@@ -53,7 +59,7 @@ int verificarFinal(char codigoDeBarras[]) {
 
     // Compara o dígito verificador calculado com o fornecido no código
     if (digito_verificador != (codigoDeBarras[7] - '0')) {
-        printf("O dígito verificador é inválido.\n");
+        //"O dígito verificador é inválido
         return 1;
     }
 
