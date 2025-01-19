@@ -25,14 +25,14 @@ int main(int argc, char *argv[]){
         cond = verificar_arquivo_valido(nome);
 
         if (cond == 0) {
-            printf("existe\n");
+
             char *lista_codigo = verificar_codigo_valido(nome);
             char esquerda[29];
             char direita[29];
 
             //Caso o código seja inválido
             if (lista_codigo == NULL) {
-                printf("Sem código");
+                printf("O código de barras não foi encontrado!");
                 return 1;
             }
 
@@ -48,9 +48,10 @@ int main(int argc, char *argv[]){
             }
             direita[28] = '\0';
 
+            //Converte de volta 
            char *codigo_de_barras = conversorInverso(esquerda, direita);
            if(codigo_de_barras == NULL){
-                printf("Código não encontrado");
+                printf("O código de barras não foi encontrado!");
                 return 1;
            }
            char codigoFinal[9];
@@ -60,10 +61,11 @@ int main(int argc, char *argv[]){
            }
             codigoFinal[8] = '\0';
 
+            //Verifica o último dígito pra saber se é válido 
             cond = verificarFinal(codigoFinal);
 
             if(cond == 1){
-                printf("Código não encontrado");
+                printf("O código de barras não foi encontrado!");
                 return 1;
             }
 
