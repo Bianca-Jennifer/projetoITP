@@ -13,7 +13,7 @@ int verificar_arquivo_valido (char nome[30]) {
     FILE *file = fopen(nome_arquivo, "r");
 
     if (file == NULL) {
-        printf("O arquivo é inválido\n!");
+        printf("O arquivo é inválido!\n");
         return 1;
     } else {
         //----------------------primeira linha----------
@@ -21,7 +21,7 @@ int verificar_arquivo_valido (char nome[30]) {
         //verifica se tem a primeira linha
         char linha[256];
         if (fgets(linha, sizeof(linha), file) == NULL) {
-            printf("O arquivo é inválido\n");
+            printf("O arquivo é inválido!\n");
             fclose(file);
             return 1;
         }
