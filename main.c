@@ -13,14 +13,16 @@ int main(int argc, char *argv[]) {
 
     setlocale(LC_ALL, "pt_BR.UTF-8");
 
+    //Valores já definidos, caso o usuário não digite.
     int identificador = 0, espacamento_lateral = 4, quantidade_pixel = 3, altura = 50;
     char nome[30] = "codigo_de_barra.pbm";
     int cond;
     char marcadorif[4] = {'1', '0', '1', '\0'};
     char marcadorcentral[6] = {'0', '1', '0', '1', '0', '\0'};
 
-// Verifica a validade do identificador
+
     if (argc > 1) {
+        // Verifica a validade do identificador
         cond = verificar(argv[1]);
 
         if (cond == 0) {
@@ -74,8 +76,6 @@ int main(int argc, char *argv[]) {
                 
                }
                 
-
-
                 
                 if (strcmp(resposta, "nao") == 0 ||  strcmp(resposta, "n") == 0) {
                     printf("Arquivo resultante já existe!");
@@ -126,6 +126,7 @@ int main(int argc, char *argv[]) {
             printf("Arquivo com o código de barras foi gerado!");
 
         }
+        return 1;
     }
 
 

@@ -75,12 +75,10 @@ int verificar_espacamento(int **matriz, int largura_total, int altura_total) {
 
     // Compara os valores
     if (espaco_cima == espaco_baixo && espaco_cima == espaco_esquerda && espaco_cima == espaco_direita) {
-        printf("Espaçamento uniforme: %d\n", espaco_cima);
+        //Espaçamento uniforme
         return espaco_baixo;
     } else {
-        printf("Espaçamento desigual:\n");
-        printf("Cima = %d, Baixo = %d, Esquerda = %d, Direita = %d\n",
-               espaco_cima, espaco_baixo, espaco_esquerda, espaco_direita);
+        //Espaçamento desigual
         return -1;       
     }
 }
@@ -124,10 +122,10 @@ int verificar_largura_por_pixel(int **matriz, int espacamento_lateral, int largu
     }
 
     
-    printf("Largura do primeiro elemento (1) identificada: %d\n", largura_por_pixel);
+    //Largura do primeiro elemento identificada em largura_por_pixel//
     //Caso só tenha 1 na matriz
     if (!encontrado) {
-        printf("Erro!\n");
+        //Erro
         return -1;
     }
 
@@ -141,7 +139,7 @@ int verificar_largura_por_pixel(int **matriz, int espacamento_lateral, int largu
             for (int cont = 1, cont2 = j; cont <= largura_por_pixel; cont++) {
 
                 if (num != matriz[i][cont2]) {
-                    printf("Largura por pixel inconsistente:\n");
+                    //Largura por pixel inconsistente
                     return -1;
                 }
                 cont2++;
@@ -181,7 +179,7 @@ int verificar_marcadores(int **matriz, int largura_total, int altura_total, int 
 
     //Verifica se o tamanho do código está correto(3+28+5+28+3)
     if (tamanho_do_codigo != 67) {
-        printf("Erro\n");
+        //Erro
         return 1;
     }
     
@@ -189,7 +187,7 @@ int verificar_marcadores(int **matriz, int largura_total, int altura_total, int 
     //Verifica se há o marcador inicial
     for (int j = inicio_codigo, cont = 0; cont < 3; j+= largura_por_pixel, cont++) {
         if (matriz[inicio_codigo][j] != marcador_inicio_fim[cont]) {
-            printf("Erro\n");
+            //Erro
             return 1;
         }
         
@@ -199,7 +197,7 @@ int verificar_marcadores(int **matriz, int largura_total, int altura_total, int 
     //Verifica se há o marcador do meio
     for (int j = inicio_codigo + (31 * largura_por_pixel), cont = 0; cont < 5; j+= largura_por_pixel, cont++) {
         if (matriz[inicio_codigo][j] != marcador_meio[cont]) {
-            printf("Erro\n");
+            //Erro
             return 1;
         }
         
@@ -208,7 +206,7 @@ int verificar_marcadores(int **matriz, int largura_total, int altura_total, int 
     //Verifica se há o marcador final
     for (int j = fim_coluna - largura_por_pixel, cont = 2; cont >= 0; j -= largura_por_pixel, cont--) {
         if (matriz[inicio_codigo][j] != marcador_inicio_fim[cont]) {
-            printf("Erro\n");
+            //Erro
             return 1;
         }
         
@@ -253,6 +251,8 @@ char* verificar_codigo_valido (char nome[30]) {
         }
     }
 
+    //Fecha arquivo 
+    fclose(file);
     
     //Verifica se o espaçamento lateral é uniforme em todos os  lados
     int espacamento_lateral = verificar_espacamento(matriz, largura_total, altura_total);
@@ -265,16 +265,14 @@ char* verificar_codigo_valido (char nome[30]) {
     int largura_por_pixel = verificar_largura_por_pixel(matriz, espacamento_lateral, largura_total, altura_total);
     
     if (largura_por_pixel == -1) {
-        printf("O código não foi encontrado\n");
-        fclose(file);
+       //Inválido
         return NULL;
     }
 
     //Verifica se todas as linhas com o código de barra são iguais
     int cond = verificar_linhas_iguais(matriz, largura_total, altura_total, espacamento_lateral);
     if (cond == 1) {
-        printf("Inválido");
-        fclose(file);
+        //Inválido
         return NULL;
     }
 
@@ -282,8 +280,7 @@ char* verificar_codigo_valido (char nome[30]) {
     cond = verificar_marcadores(matriz, largura_total, altura_total, espacamento_lateral, largura_por_pixel);
 
     if (cond == 1) {
-        printf("Inválido");
-        fclose(file);
+        //Inválido
         return NULL;
     }
 
@@ -304,7 +301,6 @@ char* verificar_codigo_valido (char nome[30]) {
     }
     free(matriz);
 
-    fclose(file);
     return lista;
 
 }
