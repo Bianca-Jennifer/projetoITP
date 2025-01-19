@@ -258,7 +258,7 @@ char* verificar_codigo_valido (char nome[30]) {
     int espacamento_lateral = verificar_espacamento(matriz, largura_total, altura_total);
 
     if (espacamento_lateral == -1) {
-        fclose(file);
+        //Inválido
         return NULL;
     } 
 
