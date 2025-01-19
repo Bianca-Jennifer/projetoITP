@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
             FILE *file = fopen(nome_arquivo, "r");
 
             if (file != NULL) {
-                printf("O arquivo já existe!Deseja sobrescrevê-lo?");
+                printf("O arquivo já existe!Deseja sobrescrevê-lo(sim ou não)?");
                 char resposta[4];
                 fgets(resposta, sizeof(resposta), stdin);
                 resposta[strcspn(resposta, "\n")] = '\0';
@@ -122,8 +122,8 @@ int main(int argc, char *argv[]) {
             // Libera a memória da matriz
             liberar_matriz(matriz, altura_total);
 
-            // Imprime os parâmetros do código de barras
-            printf("Informações: código = %d, espaçamento lateral = %d, quantidade de pixels = %d, altura = %d, nome do arquivo = %s\n", identificador, espacamento_lateral, quantidade_pixel, altura, nome);
+            //Printf Final
+            printf("Arquivo com o código de barras foi gerado!");
 
         }
     }
